@@ -162,6 +162,24 @@ namespace TamagotchiAPI.Controllers
             // Return a copy of the deleted data
             return Ok(pet);
         }
+        [HttpPost("{id}/Playtimes")]
+        public async Task<ActionResult<Playtime>> CreatePlaytimeForPet(int id, Playtime playtime)
+        {
+            var pet = await _context.Pets.FindAsync(id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+            playtime.PetId = pet.Id;
+            playtime.When = DateTime.UtcNow;
+            pet.HappinessLevel += 5;
+            pet.HungerLevel += 3;
+
+            _context.Playtimes.Add(playtime);
+            await _context.SaveChangesAsync();
+
+            return Ok(playtime);
+        }
 
         // Private helper method that looks up an existing pet by the supplied id
         private bool PetExists(int id)
