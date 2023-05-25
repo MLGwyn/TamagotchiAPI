@@ -181,6 +181,25 @@ namespace TamagotchiAPI.Controllers
             return Ok(playtime);
         }
 
+        [HttpPost("{id}/Playtimes")]
+        public async Task<ActionResult<Feeding>> CreateFeedingForPet(int id, Feeding feeding)
+        {
+            var pet = await _context.Pets.FindAsync(id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+            feeding.PetId = pet.Id;
+            feeding.When = DateTime.UtcNow;
+            pet.HappinessLevel += 3;
+            pet.HungerLevel -= 5;
+
+            _context.Feedings.Add(feeding);
+            await _context.SaveChangesAsync();
+
+            return Ok(feeding);
+        }
+
         // Private helper method that looks up an existing pet by the supplied id
         private bool PetExists(int id)
         {
