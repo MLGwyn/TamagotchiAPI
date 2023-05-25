@@ -35,7 +35,7 @@ namespace TamagotchiAPI.Controllers
         {
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
-            return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            return await _context.Pets.OrderBy(row => row.Id).Include(pet => pet.Playtimes).Include(pet => pet.Feedings).Include(pet => pet.Scoldings).ToListAsync();
         }
 
         // GET: api/Pets/5
@@ -181,7 +181,7 @@ namespace TamagotchiAPI.Controllers
             return Ok(playtime);
         }
 
-        [HttpPost("{id}/Playtimes")]
+        [HttpPost("{id}/Feedings")]
         public async Task<ActionResult<Feeding>> CreateFeedingForPet(int id, Feeding feeding)
         {
             var pet = await _context.Pets.FindAsync(id);
@@ -199,7 +199,23 @@ namespace TamagotchiAPI.Controllers
 
             return Ok(feeding);
         }
+        [HttpPost("{id}/Scoldings")]
+        public async Task<ActionResult<Feeding>> CreateScoldingForPet(int id, Scolding scolding)
+        {
+            var pet = await _context.Pets.FindAsync(id);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+            scolding.PetId = pet.Id;
+            scolding.When = DateTime.UtcNow;
+            pet.HappinessLevel -= 5;
 
+            _context.Scoldings.Add(scolding);
+            await _context.SaveChangesAsync();
+
+            return Ok(scolding);
+        }
         // Private helper method that looks up an existing pet by the supplied id
         private bool PetExists(int id)
         {

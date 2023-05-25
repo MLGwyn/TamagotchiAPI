@@ -13,5 +13,6 @@ namespace TamagotchiAPI.Models
 
         public List<Playtime> Playtimes { get; set; }
         public List<Feeding> Feedings { get; set; }
+        public List<Scolding> Scoldings { get; set; }
     }
 }
