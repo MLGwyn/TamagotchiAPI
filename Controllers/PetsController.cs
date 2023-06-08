@@ -127,6 +127,8 @@ namespace TamagotchiAPI.Controllers
             pet.Birthday = DateTime.UtcNow.Date;
             pet.HappinessLevel = 0;
             pet.HungerLevel = 0;
+            pet.LastInteractedWithDate = DateTime.UtcNow;
+
             // Indicate to the database context we want to add this new record
             _context.Pets.Add(pet);
             await _context.SaveChangesAsync();
@@ -174,6 +176,7 @@ namespace TamagotchiAPI.Controllers
             playtime.When = DateTime.UtcNow;
             pet.HappinessLevel += 5;
             pet.HungerLevel += 3;
+            pet.LastInteractedWithDate = DateTime.UtcNow;
 
             _context.Playtimes.Add(playtime);
             await _context.SaveChangesAsync();
@@ -193,6 +196,7 @@ namespace TamagotchiAPI.Controllers
             feeding.When = DateTime.UtcNow;
             pet.HappinessLevel += 3;
             pet.HungerLevel -= 5;
+            pet.LastInteractedWithDate = DateTime.UtcNow;
 
             _context.Feedings.Add(feeding);
             await _context.SaveChangesAsync();
@@ -210,6 +214,7 @@ namespace TamagotchiAPI.Controllers
             scolding.PetId = pet.Id;
             scolding.When = DateTime.UtcNow;
             pet.HappinessLevel -= 5;
+            pet.LastInteractedWithDate = DateTime.UtcNow;
 
             _context.Scoldings.Add(scolding);
             await _context.SaveChangesAsync();
