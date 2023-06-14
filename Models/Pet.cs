@@ -13,7 +13,7 @@ namespace TamagotchiAPI.Models
         public DateTime LastInteractedWithDate { get; set; }
         public bool IsDead()
         {
-            if (LastInteractedWithDate > DateTime.UtcNow.AddDays(-3))
+            if (DateTime.UtcNow.AddDays(-3) > LastInteractedWithDate)
             {
                 return true;
             }
